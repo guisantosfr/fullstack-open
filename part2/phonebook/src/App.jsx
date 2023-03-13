@@ -28,14 +28,31 @@ const App = () => {
         alreadyExists = true
     }
 
-    alreadyExists ?
-      alert(`${newName} is already added to phonebook`) :
+    if (alreadyExists) {
+      let oldPerson = persons.find(person => person.name === newName)
+      let newPerson = { name: newName, number: newNumber, id: persons.length + 1 }
+
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personsService.update(oldPerson.id, newPerson)
+          .then(() => {
+            let personsCopy = persons.filter(person => person.id !== oldPerson.id)
+            let newPersonsCopy = [...personsCopy, newPerson]
+            setPersons(newPersonsCopy)
+            setNewName('')
+            setNewNumber('')
+          })
+
+      }
+
+    } else {
       personsService.create({ name: newName, number: newNumber, id: persons.length + 1 })
         .then(response => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
         });
+
+    }
   }
 
   const deletePerson = (personToDelete) => {
