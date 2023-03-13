@@ -28,10 +28,13 @@ const App = () => {
 
     alreadyExists ?
       alert(`${newName} is already added to phonebook`) :
-      setPersons(persons.concat({ name: newName, number: newNumber, id: persons.length + 1 }))
+      axios.post('http://localhost:3001/persons', { name: newName, number: newNumber, id: persons.length + 1 })
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        });
 
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleNameChange = (e) => {
