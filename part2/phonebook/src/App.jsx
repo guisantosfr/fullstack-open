@@ -36,7 +36,17 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         });
+  }
 
+  const deletePerson = (personToDelete) => {
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personsService.deletePerson(personToDelete.id)
+        .then(() => {
+          let newPersons = persons.filter(person => person.id !== personToDelete.id)
+          setPersons(newPersons)
+        })
+
+    }
   }
 
   const handleNameChange = (e) => {
@@ -73,7 +83,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons contactsToShow={contactsToShow} />
+      <Persons contactsToShow={contactsToShow} handleDelete={deletePerson} />
 
     </div>
   )

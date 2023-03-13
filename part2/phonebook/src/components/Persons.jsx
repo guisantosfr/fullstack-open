@@ -1,10 +1,15 @@
 import Person from "./Person"
 
-const Persons = ({ contactsToShow }) => {
+const Persons = ({ contactsToShow, handleDelete }) => {
   return (
     <ul>
       {
-        contactsToShow.map(person => <Person key={person.name} name={person.name} number={person.number} />)
+        contactsToShow.map(person =>
+          <div key={person.id}>
+            <Person name={person.name} number={person.number} />
+            <button onClick={() => handleDelete(person)}>delete</button>
+          </div>
+        )
       }
     </ul>
   )
