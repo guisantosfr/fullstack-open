@@ -5,7 +5,6 @@ import personsService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,7 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   const [showAll, setShowAll] = useState(true)
-  const [notification, setNotification] = useState(null)
+  const [notification, setNotification] = useState("")
+  const [errorNotification, setErrorNotification] = useState(false)
 
   useEffect(() => {
     personsService
@@ -46,6 +46,14 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
+          .catch(() => {
+            setNotification(
+              `Information about ${newPerson.name} has already been added to the server.`
+            );
+            setErrorNotification(true);
+            setNewName("");
+            setNewPhone("");
+          });
       }
     } else {
       personsService.create(newPerson)
@@ -57,6 +65,14 @@ const App = () => {
           }, 3000)
           setNewName('')
           setNewNumber('')
+        })
+        .catch(() => {
+          setNotification(
+            `Information about ${newPerson.name} has already been added to the server.`
+          );
+          setErrorNotification(true);
+          setNewName("");
+          setNewPhone("");
         });
 
     }
@@ -69,7 +85,14 @@ const App = () => {
           let newPersons = persons.filter(person => person.id !== personToDelete.id)
           setPersons(newPersons)
         })
-
+        .catch(() => {
+          setNotification(
+            `Information about ${newPerson.name} has already been added to the server.`
+          );
+          setErrorNotification(true);
+          setNewName("");
+          setNewPhone("");
+        });
     }
   }
 
@@ -95,7 +118,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      {notification.length > 0 ? (
+        !errorNotification ? (
+          <h3 className="notification">{notification}</h3>
+        ) : (
+          <h3 className="error">{notification}</h3>
+        )
+      ) : (
+        <></>
+      )}
+
       <Filter search={search} handleSearchChange={handleSearchChange} />
 
       <h2>Add a new</h2>
