@@ -118,7 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {notification.length > 0 ? (
+      {notification?.length > 0 ? (
         !errorNotification ? (
           <h3 className="notification">{notification}</h3>
         ) : (
