@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
 import './index.css'
 
 const App = () => {
@@ -12,15 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
 
   useEffect(() => {
     setTimeout(() => {
@@ -79,15 +71,6 @@ const App = () => {
     )
   }
 
-  const createNewBlog = (e) => {
-    e.preventDefault()
-    handleCreateBlog(title, author, url)
-
-    setAuthor('')
-    setTitle('')
-    setUrl('')
-  }
-
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -96,15 +79,18 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        {notification?.length > 0 ? (
-          !errorMessage ? (
-            <h3 className="notification">{notification}</h3>
+        {
+          notification?.length > 0 ? (
+            !errorMessage ? (
+              <h3 className="notification">{notification}</h3>
+            ) : (
+              <h3 className="error">{notification}</h3>
+            )
           ) : (
-            <h3 className="error">{notification}</h3>
+            <></>
           )
-        ) : (
-          <></>
-        )}
+        }
+
         <h2>log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -133,51 +119,27 @@ const App = () => {
 
   return (
     <div>
-      {notification?.length > 0 ? (
-        !errorMessage ? (
-          <h3 className="notification">{notification}</h3>
+      {
+        notification?.length > 0 ? (
+          !errorMessage ? (
+            <h3 className="notification">{notification}</h3>
+          ) : (
+            <h3 className="error">{notification}</h3>
+          )
         ) : (
-          <h3 className="error">{notification}</h3>
+          <></>
         )
-      ) : (
-        <></>
-      )}
+      }
+
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
 
-      <h2>create new</h2>
-
-      <form onSubmit={createNewBlog}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Togglable buttonLabel="new blog">
+        <BlogForm
+          handleCreateBlog={handleCreateBlog}
+        />
+      </Togglable>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
