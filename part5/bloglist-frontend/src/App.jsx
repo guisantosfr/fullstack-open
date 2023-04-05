@@ -89,6 +89,12 @@ const App = () => {
     setBlogs(updatedBlogs)
   }
 
+  const handleRemoveBlog = async (id) => {
+    await blogService.remove(id)
+    let oldBlogs = blogs.filter((blog) => blog.id !== id)
+    setBlogs(oldBlogs)
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -163,7 +169,8 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          handleAddLike={handleAddLike} />
+          handleAddLike={handleAddLike}
+          handleRemoveBlog={handleRemoveBlog} />
       )}
     </div>
   )

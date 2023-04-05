@@ -54,7 +54,7 @@ blogsRouter.put('/:id', async (request, response) => {
   response.status(200).send(updatedBlog)
 })
 
-blogsRouter.delete('/api/blogs/:id', async (request, response) => {
+blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
