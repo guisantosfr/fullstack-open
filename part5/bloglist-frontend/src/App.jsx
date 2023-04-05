@@ -73,6 +73,20 @@ const App = () => {
     )
   }
 
+  const handleAddLike = async (blog) => {
+    const newBlog = await blogService.addLike(blog.id, blog)
+
+    const updatedBlogs = blogs.map((blog) => {
+      if (blog.id === newBlog.id) {
+        const likes = newBlog.likes
+        return { ...blog, likes }
+      }
+      return blog
+    })
+
+    setBlogs(updatedBlogs)
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -144,7 +158,10 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleAddLike={handleAddLike} />
       )}
     </div>
   )

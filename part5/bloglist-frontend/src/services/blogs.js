@@ -24,5 +24,12 @@ const create = async (title, author, url) => {
   return response.data
 }
 
+const addLike = (id, blog) => {
+  const request = axios.put(baseUrl + '/' + id, blog, {
+    headers: { authorization: token },
+  })
+  return request.then((response) => response.data)
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, setToken }
+export default { getAll, create, setToken, addLike }
