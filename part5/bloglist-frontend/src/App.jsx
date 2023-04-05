@@ -15,11 +15,8 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      setNotification('')
-      setErrorMessage(false)
-    }, 4000)
-  }, [notification])
+    blogService.getAll().then(blogs => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -27,15 +24,16 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-
-      blogService.getAll().then((blogs) => {
-        const filteredBlogs = blogs.filter(
-          (blog) => blog.user.username === user.username
-        )
-        setBlogs(filteredBlogs)
-      })
+      blogService.getAll().then(blogs => setBlogs(blogs))
     }
   }, [])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setNotification('')
+      setErrorMessage(false)
+    }, 4000)
+  }, [notification])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -49,6 +47,10 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
+      const filteredBlogs = blogs.filter(
+        (blog) => blog.user.username === user.username
+      )
+      setBlogs(filteredBlogs)
       setUser(user)
       setUsername('')
       setPassword('')
