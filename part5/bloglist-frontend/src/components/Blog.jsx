@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleAddLike, handleRemoveBlog }) => {
@@ -31,9 +31,9 @@ const Blog = ({ blog, handleAddLike, handleRemoveBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className='subInfo'>
           {blog.title} by {blog.author}{' '}
           <button onClick={toggleVisibility}>hide</button>
           <br />
@@ -46,7 +46,7 @@ const Blog = ({ blog, handleAddLike, handleRemoveBlog }) => {
           <br />
           <button onClick={removeBlog}>remove</button>
         </div>
-        <div style={hideWhenVisible}>
+        <div style={hideWhenVisible} className='mainInfo'>
           {blog.title} by {blog.author}{' '}
           <button onClick={toggleVisibility}>view</button>
         </div>
@@ -57,8 +57,8 @@ const Blog = ({ blog, handleAddLike, handleRemoveBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  handleAddLike: PropTypes.func.isRequired,
-  handleRemoveBlog: PropTypes.func.isRequired
+  handleAddLike: PropTypes.func,
+  handleRemoveBlog: PropTypes.func
 }
 
 export default Blog
