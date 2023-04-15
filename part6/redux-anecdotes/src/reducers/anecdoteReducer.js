@@ -26,6 +26,13 @@ export const voteOnAnecdote = (id) => {
   }
 }
 
+export const createAnecdote = (content) => {
+  return {
+    type: 'CREATE',
+    payload: { content }
+  }
+}
+
 const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case "VOTE":
@@ -41,11 +48,16 @@ const anecdoteReducer = (state = initialState, action) => {
 
       return newState.sort((a, b) =>
         a.votes < b.votes ? 1 : b.votes < a.votes ? -1 : 0
-      );
+      )
 
+    case 'CREATE':
+      const newAnecdote = asObject(action.payload.content)
+      return state.concat(newAnecdote)
+
+    default:
+      return state
   }
 
-  return state
 }
 
 export default anecdoteReducer
