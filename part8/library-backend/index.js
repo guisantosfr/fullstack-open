@@ -86,13 +86,12 @@ let books = [
   },
 ]
 
-/* TODO: Define my types here */
-
 const typeDefs = `
   type Author {
     name: String!
     id: ID!
-    born: Int
+    born: Int,
+    bookCount: Int
   }
 
   type Book {
@@ -106,17 +105,21 @@ const typeDefs = `
   type Query {
     bookCount: Int!,
     authorCount: Int!,
-    allBooks: [Book]!
+    allBooks: [Book]!,
+    allAuthors: [Author!]!
   }
 `
-
-/* TODO: Define my queries here */
 
 const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: () => books
+    allBooks: () => books,
+    allAuthors: () => authors
+  },
+
+  Author: {
+    bookCount: root => books.filter(p => p.author === root.name).length
   }
 }
 
