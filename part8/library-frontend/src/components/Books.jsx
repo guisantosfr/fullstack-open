@@ -1,5 +1,5 @@
-const Books = () => {
-  const books = []
+const Books = ({result}) => {
+  const books = [...result]
 
   return (
     <div>

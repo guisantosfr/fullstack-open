@@ -1,5 +1,5 @@
-const Authors = () => {
-  const authors = []
+const Authors = ({result}) => {
+  const authors = [...result]
 
   return (
     <div>
