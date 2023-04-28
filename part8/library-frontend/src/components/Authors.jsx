@@ -15,6 +15,12 @@ const Authors = ({result, editAuthor}) => {
     setBorn('')
   }
 
+  if(!result){
+    return <div>Loading ...</div>
+  }
+
+  console.log(result)
+
   return (
     <div>
       <h2>authors</h2>
@@ -39,10 +45,11 @@ const Authors = ({result, editAuthor}) => {
       <form onSubmit={submit}>
       <div>
           name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+          <select value={name} onChange={({ target }) => setName(target.value)}>
+            {
+              result.map(a => <option key={a.name} value={a.name}>{a.name}</option>)
+            }
+          </select>
       </div>
       <div>
           born
