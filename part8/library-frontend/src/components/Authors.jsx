@@ -1,5 +1,19 @@
-const Authors = ({result}) => {
+import { useState } from "react"
+
+const Authors = ({result, editAuthor}) => {
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState('')
+
   const authors = [...result]
+
+  const submit = async (event) => {
+    event.preventDefault()
+
+    await editAuthor({ variables: { name, "setBornTo": parseInt(born) } })
+
+    setName('')
+    setBorn('')
+  }
 
   return (
     <div>
@@ -20,6 +34,25 @@ const Authors = ({result}) => {
           ))}
         </tbody>
       </table>
+
+      <h2>Set birthyear</h2>
+      <form onSubmit={submit}>
+      <div>
+          name
+          <input
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
+      </div>
+      <div>
+          born
+          <input
+            value={born}
+            onChange={({ target }) => setBorn(target.value)}
+          />
+      </div>
+      <button type="submit">update author</button>
+    </form>
     </div>
   )
 }

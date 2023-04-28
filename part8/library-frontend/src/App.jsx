@@ -37,7 +37,18 @@ const CREATE_BOOK = gql`
       author
     }
   }
+`
 
+const EDIT_AUTHOR = gql`
+  mutation editAuthor($name: String!, $setBornTo: Int!){
+    editAuthor(
+      name: $name,
+      setBornTo: $setBornTo
+    ){
+      name,
+      born
+    }
+  }
 `
 
 const App = () => {
@@ -46,6 +57,10 @@ const App = () => {
 
   const [addBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [ { query: ALL_BOOKS} ]
+  })
+
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [ { query: ALL_AUTHORS} ]
   })
 
   if (authors.loading || books.loading) {
@@ -68,7 +83,7 @@ const App = () => {
 
       <Routes>
         <Route path='/' element={<></>} />
-        <Route path='/authors' element={<Authors result={authors.data.allAuthors} />} />
+        <Route path='/authors' element={<Authors result={authors.data.allAuthors} editAuthor={editAuthor}/>} />
         <Route path='/books' element={<Books result={books.data.allBooks}/>} />
         <Route path='/new-book' element={<NewBook addBook={addBook} />} />
       </Routes>
