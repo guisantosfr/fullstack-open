@@ -9,8 +9,7 @@ const ALL_AUTHORS = gql`
   query{
     allAuthors{
       name,
-      born,
-      bookCount
+      born
     }
   }
 `
@@ -18,8 +17,10 @@ const ALL_AUTHORS = gql`
 const ALL_BOOKS = gql`
   query {
     allBooks {
-      title,
-      author,
+      title
+      author {
+        name
+      }
       published
     }
   }
