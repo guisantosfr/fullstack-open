@@ -1,8 +1,16 @@
 import { useState } from "react"
 
-const Authors = ({result, editAuthor}) => {
+const Authors = ({show, result, editAuthor}) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
+
+  if (!show) {
+    return null
+  }
+
+  if (result.loading) {
+    return <div>loading...</div>
+  }
 
   const authors = [...result]
 
@@ -18,8 +26,6 @@ const Authors = ({result, editAuthor}) => {
   if(!result){
     return <div>Loading ...</div>
   }
-
-  console.log(result)
 
   return (
     <div>

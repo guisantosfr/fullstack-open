@@ -1,11 +1,15 @@
 import { useState } from 'react'
 
-const NewBook = ({addBook}) => {
+const NewBook = ({show, addBook}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+
+  if (!show) {
+    return null
+  }
 
   const submit = async (event) => {
     event.preventDefault()

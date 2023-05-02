@@ -1,8 +1,9 @@
-import { Link, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
+import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 
 const ALL_AUTHORS = gql`
@@ -53,6 +54,9 @@ const EDIT_AUTHOR = gql`
 `
 
 const App = () => {
+  const [page, setPage] = useState('authors')
+  const [token, setToken] = useState(null)
+
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
 
@@ -68,26 +72,35 @@ const App = () => {
     return <div>loading...</div>
   }
 
+  if(!token){
+    return(
+      <div>
+        <div>
+          <button onClick={() => setPage('authors')}>authors</button>
+          <button onClick={() => setPage('books')}>books</button>
+          <button onClick={() => setPage('login')}>login</button>
+        </div>
+
+        <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor}/>
+        <Books show={page === 'books'} result={books.data.allBooks}/>
+        <LoginForm show={page === 'login'} login={login} setToken={(token) => setToken(token)}/>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div>
-        <Link to='/authors'>
-          <button>authors</button>
-        </Link>
-        <Link to='/books'>
-          <button>books</button>
-        </Link>
-        <Link to='/new-book'>
-          <button>add book</button>
-        </Link>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('new')}>add book</button>
+        <button onClick={() => logout()}>logout</button>
       </div>
 
-      <Routes>
-        <Route path='/' element={<></>} />
-        <Route path='/authors' element={<Authors result={authors.data.allAuthors} editAuthor={editAuthor}/>} />
-        <Route path='/books' element={<Books result={books.data.allBooks}/>} />
-        <Route path='/new-book' element={<NewBook addBook={addBook} />} />
-      </Routes>
+      <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor}/>
+      <Books show={page === 'books'} result={books.data.allBooks}/>
+      <LoginForm show={page === 'login'}/>
+      <NewBook show={page === 'new'} addBook={addBook} />
     </div>
   )
 }

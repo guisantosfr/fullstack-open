@@ -1,4 +1,12 @@
-const Books = ({result}) => {
+const Books = ({show, result}) => {
+  if (!show) {
+    return null
+  }
+
+  if (result.loading) {
+    return <div>loading...</div>
+  }
+
   const books = [...result]
 
   return (
