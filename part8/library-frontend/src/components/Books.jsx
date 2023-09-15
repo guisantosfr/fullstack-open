@@ -14,10 +14,6 @@ const Books = ({ show, result }) => {
   const books = [...result]
   const genres = ["refactoring", "agile", "patterns", "design", "crime", "classic", "all genres"]
 
-  console.log(result)
-  console.log(books)
-  console.log(filter)
-
   return (
     <div>
       <h2>books</h2>
