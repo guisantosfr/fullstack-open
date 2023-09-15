@@ -1,22 +1,37 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useMutation } from "@apollo/client"
 
-const LoginForm = ({show}) => {
+const LoginForm = ({ show, loginMutation, setToken }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const [login, result] = useMutation(loginMutation)
+
+  useEffect(() => {
+    if (result.data) {
+      const token = result.data.login.value
+      setToken(token)
+      localStorage.setItem('library-user-token', token)
+    }
+  }, [result.data])
 
   if (!show) {
     return null
   }
 
-  const login = () => {}
+  const submit = async (event) => {
+    event.preventDefault()
 
-  return(
-    <form onSubmit={login}>
+    login({ variables: { username, password } })
+  }
+
+  return (
+    <form onSubmit={submit}>
       <div>
         name
         <input
           value={username}
-          onChange={({ target }) => setTitle(target.value)}
+          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
@@ -24,7 +39,7 @@ const LoginForm = ({show}) => {
         <input
           type="password"
           value={password}
-          onChange={({ target }) => setTitle(target.value)}
+          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
 

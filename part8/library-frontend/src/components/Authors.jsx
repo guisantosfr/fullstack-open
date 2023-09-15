@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Authors = ({show, result, editAuthor}) => {
+const Authors = ({ show, result, editAuthor }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
@@ -23,7 +23,7 @@ const Authors = ({show, result, editAuthor}) => {
     setBorn('')
   }
 
-  if(!result){
+  if (!result) {
     return <div>Loading ...</div>
   }
 
@@ -49,23 +49,24 @@ const Authors = ({show, result, editAuthor}) => {
 
       <h2>Set birthyear</h2>
       <form onSubmit={submit}>
-      <div>
+        <div>
           name
           <select value={name} onChange={({ target }) => setName(target.value)}>
+            <option selected disabled hidden value="">Select author</option>
             {
               result.map(a => <option key={a.name} value={a.name}>{a.name}</option>)
             }
           </select>
-      </div>
-      <div>
+        </div>
+        <div>
           born
           <input
             value={born}
             onChange={({ target }) => setBorn(target.value)}
           />
-      </div>
-      <button type="submit">update author</button>
-    </form>
+        </div>
+        <button type="submit">update author</button>
+      </form>
     </div>
   )
 }

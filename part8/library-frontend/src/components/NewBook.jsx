@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const NewBook = ({show, addBook}) => {
+const NewBook = ({ show, addBook }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -15,7 +15,7 @@ const NewBook = ({show, addBook}) => {
     event.preventDefault()
 
     await addBook({
-      variables: {title, author, "published": parseInt(published), genres }
+      variables: { title, author, "published": parseInt(published), genres }
     })
 
     setTitle('')

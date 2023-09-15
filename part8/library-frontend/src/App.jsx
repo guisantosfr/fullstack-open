@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -36,7 +36,9 @@ const CREATE_BOOK = gql`
       genres: $genres
     ){
       title,
-      author
+      author {
+        name
+      }
     }
   }
 `
@@ -53,6 +55,14 @@ const EDIT_AUTHOR = gql`
   }
 `
 
+const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password)  {
+      value
+    }
+  }
+`
+
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
@@ -60,20 +70,30 @@ const App = () => {
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
 
+  const client = useApolloClient()
+
   const [addBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [ { query: ALL_BOOKS} ]
+    refetchQueries: [{ query: ALL_BOOKS }]
   })
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [ { query: ALL_AUTHORS} ]
+    refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
   if (authors.loading || books.loading) {
     return <div>loading...</div>
   }
 
-  if(!token){
-    return(
+  const logout = () => {
+    setToken(null)
+    setPage('authors')
+    localStorage.clear()
+    client.resetStore()
+  }
+
+
+  if (!token) {
+    return (
       <div>
         <div>
           <button onClick={() => setPage('authors')}>authors</button>
@@ -81,9 +101,9 @@ const App = () => {
           <button onClick={() => setPage('login')}>login</button>
         </div>
 
-        <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor}/>
-        <Books show={page === 'books'} result={books.data.allBooks}/>
-        <LoginForm show={page === 'login'} login={login} setToken={(token) => setToken(token)}/>
+        <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor} />
+        <Books show={page === 'books'} result={books.data.allBooks} />
+        <LoginForm show={page === 'login'} loginMutation={LOGIN} setToken={setToken} />
       </div>
     )
   }
@@ -97,9 +117,8 @@ const App = () => {
         <button onClick={() => logout()}>logout</button>
       </div>
 
-      <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor}/>
-      <Books show={page === 'books'} result={books.data.allBooks}/>
-      <LoginForm show={page === 'login'}/>
+      <Authors show={page === 'authors'} result={authors.data.allAuthors} editAuthor={editAuthor} />
+      <Books show={page === 'books'} result={books.data.allBooks} />
       <NewBook show={page === 'new'} addBook={addBook} />
     </div>
   )

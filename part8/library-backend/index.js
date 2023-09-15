@@ -19,7 +19,7 @@ mongoose.connect(MONGODB_URI)
   })
   .catch((error) => {
     console.log('error connection to MongoDB:', error.message)
-})
+  })
 
 const typeDefs = `
   type Author {
@@ -31,10 +31,10 @@ const typeDefs = `
 
   type Book {
     title: String!,
-    published: Int!,
     author: Author!,
-    id: ID!,
+    published: Int!,
     genres: [String]!
+    id: ID!,
   }
 
   type User {
@@ -90,14 +90,14 @@ const resolvers = {
     allAuthors: async () => await Author.find({}),
     me: (root, args, context) => {
       return context.currentUser
-  },
+    },
   },
 
   Author: {
     bookCount: root => Book.countDocuments({ author: root.name })
   },
 
-  Mutation:{
+  Mutation: {
     addBook: async (root, args, context) => {
       const authorExists = await Author.findOne({ name: args.author })
       const currentUser = context.currentUser
@@ -110,12 +110,12 @@ const resolvers = {
         })
       }
 
-      if(!authorExists){
+      if (!authorExists) {
         const newAuthor = new Author({ "name": args.author })
 
-        try{
+        try {
           await newAuthor.save()
-        }catch(error){
+        } catch (error) {
           throw new GraphQLError('Saving author failed', {
             extensions: {
               code: 'BAD_USER_INPUT',
@@ -127,7 +127,7 @@ const resolvers = {
       }
 
       const foundAuthor = await Author.findOne({ name: args.author })
-      const newBook = new Book({...args, author: foundAuthor})
+      const newBook = new Book({ ...args, author: foundAuthor })
 
       try {
         const response = await newBook.save()
@@ -156,7 +156,7 @@ const resolvers = {
         })
       }
 
-      if(!author){
+      if (!author) {
         return null
       }
 
@@ -174,38 +174,38 @@ const resolvers = {
     },
 
     createUser: async (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
 
       return user.save()
-      .catch(error => {
-        throw new GraphQLError('Creating the user failed', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
-            error
-          }
+        .catch(error => {
+          throw new GraphQLError('Creating the user failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.name,
+              error
+            }
+          })
         })
-      })
 
     },
 
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
 
-    if ( !user || args.password !== 'secret' ) {
-      throw new GraphQLError('wrong credentials', {
-        extensions: {
-          code: 'BAD_USER_INPUT'
-        }
-      })
-    }
+      if (!user || args.password !== 'secret') {
+        throw new GraphQLError('wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })
+      }
 
-    const userForToken = {
-      username: user.username,
-      id: user._id,
-    }
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
 
-    return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
 
     }
   }
@@ -219,10 +219,10 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
   listen: { port: 4000 },
 
-  context: async({req, res}) => {
+  context: async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null
 
-    if(auth && auth.toLowerCase().startsWith('bearer ')){
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(
         auth.substring(7), process.env.JWT_SECRET
       )
