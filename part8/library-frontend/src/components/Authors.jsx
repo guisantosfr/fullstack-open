@@ -52,7 +52,7 @@ const Authors = ({ show, result, editAuthor }) => {
         <div>
           name
           <select value={name} onChange={({ target }) => setName(target.value)}>
-            <option selected disabled hidden value="">Select author</option>
+            <option disabled hidden value="">Select author</option>
             {
               result.map(a => <option key={a.name} value={a.name}>{a.name}</option>)
             }
