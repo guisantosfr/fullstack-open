@@ -24,4 +24,21 @@ const calculateBmi = (height: number, weigth: number) => {
   return message
 }
 
-console.log(calculateBmi(180, 74))
+export const parseAndCalculateBmi = (arg1: any, arg2: any) => {
+  if (!arg1 || !arg2) {
+    throw "You need to provide both height and weight";
+  }
+
+  const height = parseFloat(arg1);
+  const weight = parseFloat(arg2);
+
+  if (Number.isNaN(height) || Number.isNaN(weight)) {
+    throw "Both height and weight need to be numbers";
+  }
+
+  return calculateBmi(height, weight);
+};
+
+if (process.argv.length > 2) {
+  console.log(parseAndCalculateBmi(process.argv[2], process.argv[3]));
+}

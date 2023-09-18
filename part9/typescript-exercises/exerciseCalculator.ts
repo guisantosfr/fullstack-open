@@ -39,4 +39,26 @@ const calculateExercises = (hours: number[], target: number): Result => {
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+export const parseInputCalculateExercises = (
+  targetRaw: any,
+  exercisesRaw: any[]
+) => {
+  if (!targetRaw || exercisesRaw.length === 0) {
+    throw "parameters missing";
+  }
+
+  const exercises = exercisesRaw.map((e) => parseFloat(e));
+  const target = parseFloat(targetRaw);
+
+  if (Number.isNaN(target) || exercises.some((e) => isNaN(e))) {
+    throw "malformatted parameters";
+  }
+
+  return calculateExercises(exercises, target);
+};
+
+if (process.argv.length > 2) {
+  const [, , target, ...exercises] = process.argv;
+
+  console.log(parseInputCalculateExercises(target, exercises));
+}
