@@ -1,6 +1,9 @@
 import { useState, useEffect, FC } from 'react'
 import axios from 'axios'
 import DiaryEntry from './components/DiaryEntry';
+import NewDiaryEntryForm from './components/NewDiaryEntryForm';
+import { NewDiaryEntry } from './types'
+
 
 const App: FC = () => {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
@@ -18,9 +21,16 @@ const App: FC = () => {
     fetchDiaries();
   }, []);
 
+  const handleNewEntry = (newEntry: NewDiaryEntry) => {
+    const updatedEntry = { ...newEntry, id: Date.now() }; 
+    setDiaryEntries([...diaryEntries, updatedEntry]);
+  };
+
+
   return (
     <div>
       <h1>Diary Entries</h1>
+      <NewDiaryEntryForm onAddEntry={handleNewEntry} />
       <ul>
         {diaryEntries.map(entry => (
           <DiaryEntry key={entry.id} entry={entry} />
