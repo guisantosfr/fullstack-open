@@ -4,7 +4,6 @@ import DiaryEntry from './components/DiaryEntry';
 import NewDiaryEntryForm from './components/NewDiaryEntryForm';
 import { NewDiaryEntry } from './types'
 
-
 const App: FC = () => {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
 
@@ -14,7 +13,7 @@ const App: FC = () => {
         const response = await axios.get<DiaryEntry[]>('http://localhost:3000/api/diaries');
         setDiaryEntries(response.data);
       } catch (error) {
-        console.error('Error fetching diary entries:', error);
+        console.error(error);
       }
     };
 

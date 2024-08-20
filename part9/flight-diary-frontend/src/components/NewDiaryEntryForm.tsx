@@ -8,6 +8,11 @@ interface NewDiaryEntryFormProps {
   onAddEntry: (newEntry: NewDiaryEntry) => void;
 }
 
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>
+}
+
 const NewDiaryEntryForm: FC<NewDiaryEntryFormProps> = ({ onAddEntry }) => {
   const [newDate, setNewDate] = useState('');
   const [newWeather, setNewWeather] = useState('');
@@ -33,7 +38,16 @@ const NewDiaryEntryForm: FC<NewDiaryEntryFormProps> = ({ onAddEntry }) => {
       setNewVisibility('');
       setNewComment('');
     } catch (error) {
-      console.error('Error adding diary entry:', error);
+      if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
+        if (error.response) {
+          alert(`Failed to add diary entry: ${error.response.data}`);
+        } else {
+          alert('Network error. Please try again later.');
+        }
+      }else{
+        alert('An unexpected error occurred.');
+      }
+
     }
   };
 
