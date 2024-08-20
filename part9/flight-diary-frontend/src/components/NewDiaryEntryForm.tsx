@@ -2,7 +2,7 @@
 import { FC, FormEvent, useState } from 'react';
 import axios from 'axios';
 
-import { DiaryEntry,Weather,Visibility,NewDiaryEntry } from '../types';
+import { DiaryEntry, Weather, Visibility, NewDiaryEntry } from '../types';
 
 interface NewDiaryEntryFormProps {
   onAddEntry: (newEntry: NewDiaryEntry) => void;
@@ -15,17 +15,17 @@ interface ValidationError {
 
 const NewDiaryEntryForm: FC<NewDiaryEntryFormProps> = ({ onAddEntry }) => {
   const [newDate, setNewDate] = useState('');
-  const [newWeather, setNewWeather] = useState('');
-  const [newVisibility, setNewVisibility] = useState('');
+  const [newVisibility, setNewVisibility] = useState<Visibility>(Visibility.Great);
+  const [newWeather, setNewWeather] = useState<Weather>(Weather.Sunny);
   const [newComment, setNewComment] = useState('');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    const newEntry: Omit<DiaryEntry, 'id'> = {
+    const newEntry: NewDiaryEntry = {
       date: newDate,
-      weather: newWeather as Weather,
-      visibility: newVisibility as Visibility,
+      weather: newWeather,
+      visibility: newVisibility,
       comment: newComment,
     };
 
@@ -34,8 +34,8 @@ const NewDiaryEntryForm: FC<NewDiaryEntryFormProps> = ({ onAddEntry }) => {
       onAddEntry(response.data);
       
       setNewDate('');
-      setNewWeather('');
-      setNewVisibility('');
+      setNewWeather(Weather.Sunny);
+      setNewVisibility(Visibility.Great);
       setNewComment('');
     } catch (error) {
       if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
@@ -57,19 +57,48 @@ const NewDiaryEntryForm: FC<NewDiaryEntryFormProps> = ({ onAddEntry }) => {
         <label htmlFor="date">Date:</label>
         <input type="date" id="date" value={newDate} onChange={e => setNewDate(e.target.value)} required />
       </div>
-      <div>
-        <label htmlFor="weather">Weather:</label>
-        <input type="text" id="weather" value={newWeather} onChange={e => setNewWeather(e.target.value)} required />
-      </div>
+
       <div>
         <label htmlFor="visibility">Visibility:</label>
-        <input type="text" id="visibility" value={newVisibility} onChange={e => setNewVisibility(e.target.value)} required />
+
+        {
+          Object.values(Visibility).map((visibility) => (
+            <label key={visibility}>
+              <input 
+              type='radio'
+              value={visibility}
+              checked={newVisibility === visibility}
+              onChange={() => setNewVisibility(visibility)}
+              />
+              {visibility}
+            </label>
+          ))
+        }
       </div>
+
+      <div>
+        <label htmlFor="weather">Weather:</label>
+
+        {
+          Object.values(Weather).map((weather) => (
+            <label key={weather}>
+              <input 
+              type='radio'
+              value={weather}
+              checked={newWeather === weather}
+              onChange={() => setNewWeather(weather)}
+              />
+              {weather}
+            </label>
+          ))
+        }  
+      </div>
+
       <div>
         <label htmlFor="comment">Comment:</label>
-        <textarea id="comment" value={newComment} onChange={e => setNewComment(e.target.value)} />
+        <input type='text' id="comment" value={newComment} onChange={e => setNewComment(e.target.value)} />
       </div>
-      <button type="submit">Add Entry</button>
+      <button type="submit">Add</button>
     </form>
   );
 };

@@ -28,8 +28,9 @@ const App: FC = () => {
 
   return (
     <div>
-      <h1>Diary Entries</h1>
+      <h2>Add new entry</h2>
       <NewDiaryEntryForm onAddEntry={handleNewEntry} />
+      <h2>Diary Entries</h2>
       <ul>
         {diaryEntries.map(entry => (
           <DiaryEntry key={entry.id} entry={entry} />
