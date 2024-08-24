@@ -6,13 +6,18 @@ import { NonSensitivePatientData, Patient, NewPatient } from '../types';
 const patients: Patient[] = patientsData;
 
 const getNonSensitiveDataFromPatient = (): NonSensitivePatientData[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    entries
   }));
+}
+
+const getPatient = (id: String): Patient | undefined => {
+  return patients.find(patient => patient.id === id);
 }
 
 const addPatient = (
@@ -30,5 +35,6 @@ const addPatient = (
 
 export default {
   getNonSensitiveDataFromPatient,
+  getPatient,
   addPatient
 }
