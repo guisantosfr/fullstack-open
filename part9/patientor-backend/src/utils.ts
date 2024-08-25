@@ -50,15 +50,15 @@ const parseDateOfBirth = (dateOfBirth: unknown): string => {
 
 const parseGender = (gender: unknown): Gender => {
   if (gender === "male") {
-    return Gender.male;
+    return Gender.Male;
   }
 
   if (gender === "female") {
-    return Gender.female;
+    return Gender.Female;
   }
 
   if (gender === "other") {
-    return Gender.other;
+    return Gender.Other;
   }
 
   throw new Error("Gender can only be female or male, it was " + gender);
