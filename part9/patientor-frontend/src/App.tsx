@@ -30,7 +30,7 @@ const App = () => {
           <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
             Patientor
           </Typography>
-          <Button component={Link} to="/" variant="contained" color="primary">
+          <Button component={Link} to="/" variant="contained" color="primary" sx={{ mb: 5 }}>
             Home
           </Button>
           <Divider hidden />

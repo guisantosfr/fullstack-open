@@ -44,11 +44,11 @@ const PatientDetailsPage = () => {
       <Box display='flex'>
         <Typography variant="h4" mr={3}>{patient.name}</Typography>
         {
-            patient.gender === 'male' ? <Male/>
-            : <Female/>
+          patient.gender === 'male' ? <Male />
+            : <Female />
         }
       </Box>
-     
+
       <List>
         <ListItem>
           <ListItemText primary="SSN" secondary={patient.ssn} />
@@ -69,6 +69,21 @@ const PatientDetailsPage = () => {
       </List>
 
       <Typography variant="h5">Entries:</Typography>
+      {
+        patient.entries.map((entry) => (
+          <>
+            <Typography key={entry.id}>{entry.date} - {entry.description}</Typography>
+
+            {entry.diagnosisCodes && (
+              <ul>
+                {entry.diagnosisCodes.map((code) => (
+                  <li key={code}>{code}</li>
+                ))}
+              </ul>
+            )}
+          </>
+        ))
+      }
 
     </Container>
   );
