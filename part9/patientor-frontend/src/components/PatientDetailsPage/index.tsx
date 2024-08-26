@@ -17,6 +17,8 @@ import {
 
 import { Female, Male } from '@mui/icons-material';
 
+import EntryDetails from "../EntryDetails";
+
 const PatientDetailsPage = () => {
   const { id } = useParams<{ id: string }>(); // Extract patient ID from URL
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -84,7 +86,8 @@ const PatientDetailsPage = () => {
       {
         patient.entries.map((entry) => (
           <>
-            <Typography key={entry.id}>{entry.date} - {entry.description}</Typography>
+            <EntryDetails key={entry.id} entry={entry}/>
+            {/* <Typography key={entry.id}>{entry.date} - {entry.description}</Typography>
 
             <ul>
               {entry.diagnosisCodes &&
@@ -93,7 +96,7 @@ const PatientDetailsPage = () => {
                     {code}: {diagnoses.find((diagnosis) => diagnosis.code === code)?.name}
                   </li>
                 ))}
-            </ul>
+            </ul> */}
           </>
         ))
       }
